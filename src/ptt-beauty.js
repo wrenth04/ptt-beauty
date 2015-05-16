@@ -10,7 +10,7 @@ var ptt = {
   }
 }
 
-if(typeof unsafeWindow === 'object') {// for greasemonkey
+if(typeof unsafeWindow === 'object') { // for greasemonkey
   if(typeof unsafeWindow.ptt === 'object') return;
   unsafeWindow.ptt = ptt;
 } else {
@@ -83,9 +83,13 @@ function index(){
   var pagePrefix = $('.pull-right a:nth-child(2)')
     .attr('href')
     .replace(/[0-9]+\.html/, '');
+  var $content = $('.r-ent:first').parent();
     
   nextPage = parseInt(nextPage);
-  getPhoto($('.r-ent'));
+  var $posts = $($('.r-ent').get().reverse());
+  $posts.remove();
+  $content.append($posts);
+  getPhoto($posts);
 
   $('.bbs-screen').infinitescroll({
     navSelector: '#topbar a:last',
@@ -97,9 +101,11 @@ function index(){
       return prev;
     }
   }, function(items, options, pagePath) {
-    getPhoto($(items));
+    var $items = $(items.reverse());
+    $items.remove();
+    $content.append($items);
+    getPhoto($items);
   });
-
 
   function getPhoto($posts) {
     $posts.find('.title a').fancybox({
@@ -163,3 +169,4 @@ function post() {
   $('a.group').fancybox();
 }
 }());
+
