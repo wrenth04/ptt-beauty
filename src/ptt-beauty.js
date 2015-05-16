@@ -69,6 +69,8 @@ function init(){
     var _customCss = document.createElement('style');
     _customCss.innerHTML =
       'a.fancybox-nav:hover, a.group:hover { background-color:transparent }'
+      +' .r-ent { width: 95%; margin-left: 2.5%; background-color: #333; border-radius: 10px;}'
+      +' .r-ent:hover { background-color: #444;}'
       +' .ptt-img { max-width: '+ptt.config.size+'; max-height: '+ptt.config.size+'; padding: 10px; border-radius: 10px; background-color: white; margin: 5px;}'
     document.head.appendChild(_customCss);
   }
