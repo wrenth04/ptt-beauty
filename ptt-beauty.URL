@@ -1,0 +1,6 @@
+[InternetShortcut]
+URL=javascript:var%20_pttBeauty%20=%20document.createElement('script');%20_pttBeauty.src%20=%20'https://bitbucket.org/wrenth04/ptt-beauty/raw/master/src/ptt-beauty.js';%20document.head.appendChild(_pttBeauty);%20exit;
+IDList=
+HotKey=0
+IconFile=C:\Users\Administrator\AppData\Local\Mozilla\Firefox\Profiles\4a1eix6q.default\shortcutCache\9HZXt01dKJsY89eheQrKzg==.ico
+IconIndex=0
