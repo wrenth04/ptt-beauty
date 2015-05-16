@@ -71,6 +71,7 @@ function init(){
       'a.fancybox-nav:hover, a.group:hover { background-color:transparent }'
       +' .r-ent { width: 95%; margin-left: 2.5%; background-color: #333; border-radius: 10px;}'
       +' .r-ent:hover { background-color: #444;}'
+      +' .r-ent .pull-right { margin-right: 10px;}'
       +' .ptt-img { max-width: '+ptt.config.size+'; max-height: '+ptt.config.size+'; padding: 10px; border-radius: 10px; background-color: white; margin: 5px;}'
     document.head.appendChild(_customCss);
   }
@@ -139,7 +140,13 @@ function index(){
               + '<img class="ptt-img" src="'+ _imgs[i].src + '"'
               + '></a>';
           }
-          $title.html($title.html()+' ('+ _imgs.length +'p)<br>' + imgHTML);
+          var time = _temp.getElementsByClassName('article-meta-value')[3].innerHTML;
+          $title.html(
+            $title.html()
+            +' ('+ _imgs.length +'p)'
+            +' <span class="pull-right">'+time+'</span><br>'
+            + imgHTML
+          );
 
           document.body.removeChild(_temp);
           next();
