@@ -10,10 +10,13 @@ var ptt = {
   }
 }
 
-if(typeof unsafeWindow === 'object') // for greasemonkey
+if(typeof unsafeWindow === 'object') {// for greasemonkey
+  if(typeof unsafeWindow.ptt === 'object') return;
   unsafeWindow.ptt = ptt;
-else
+} else {
+  if(typeof window.ptt === 'object') return;
   window.ptt = ptt;
+}
 
 setTimeout(function(){ ptt.init(); }, 100);
 
