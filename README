@@ -1,0 +1,3 @@
+# bookmarklet
+(javascript:(function () { var _pttBeauty = document.createElement('script'); _pttBeauty.src = 'https://bitbucket.org/wrenth04/ptt-beauty/raw/master/src/ptt-beauty.js'; document.head.appendChild(_pttBeauty); }());
+)[save link]
