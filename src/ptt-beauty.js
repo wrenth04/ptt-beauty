@@ -135,11 +135,15 @@ function index(){
 
           var imgHTML = '';
           for(var i=0 ; i<_imgs.length ; i++) {
+            var thumb = _imgs[i].src;
+            if(thumb.indexOf('imgur.com') != -1) {
+			  thumb = thumb.replace(/\.[^\.]+$/, 'l.') + thumb.split('.').pop();
+			}
             imgHTML+= 
               '<a class="group" href="'+ _imgs[i].src +'"'
               + ' title="'+ $title.text() +' ( '+(i+1)+' / '+_imgs.length+' ) "'
               + ' rel="all">'
-              + '<img class="ptt-img" src="'+ _imgs[i].src + '"'
+              + '<img class="ptt-img" src="'+ thumb + '"'
               + '></a>';
           }
           var time = _temp.getElementsByClassName('article-meta-value')[3].innerHTML;
