@@ -72,7 +72,8 @@ function init(){
       +' .r-ent { width: 95%; margin-left: 2.5%; background-color: #333; border-radius: 10px;}'
       +' .r-ent:hover { background-color: #444;}'
       +' .r-ent .pull-right { margin-right: 10px;}'
-      +' .ptt-img { max-width: '+ptt.config.size+'; max-height: '+ptt.config.size+'; padding: 10px; border-radius: 10px; background-color: white; margin: 5px;}'
+      +' .bbs-screen img { padding: 10px; border-radius: 10px; background-color: white; margin: 5px;}'
+      +' .ptt-img { max-width: '+ptt.config.size+'; max-height: '+ptt.config.size+';}'
     document.head.appendChild(_customCss);
   }
 }
