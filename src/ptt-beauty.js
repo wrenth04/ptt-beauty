@@ -162,20 +162,24 @@ function index(){
 
 function post() {
   var isInIFrame = (window.location != window.parent.location);
-  if(isInIFrame) return;
-
-  var _imgs = document.getElementsByTagName('img');
-  for(var i=0 ; i<_imgs.length ; i++) {
-    var _parent = _imgs[i].parentNode;
-    _parent.innerHTML =
-      '<a class="group" href="'+ _imgs[i].src +'"'
-      + ' title="'+(i+1)+' / '+_imgs.length+'"'
-      + ' rel="all">'
-      + _parent.innerHTML
-      + '</a>';
+  if(isInIFrame) {
+    $('#topbar-container').remove();
+	$('#navigation-container').remove();
+	document.body.style.padding = '0px';
+  } else {
+    var _imgs = document.getElementsByTagName('img');
+    for(var i=0 ; i<_imgs.length ; i++) {
+      var _parent = _imgs[i].parentNode;
+      _parent.innerHTML =
+        '<a class="group" href="'+ _imgs[i].src +'"'
+        + ' title="'+(i+1)+' / '+_imgs.length+'"'
+        + ' rel="all">'
+        + _parent.innerHTML
+        + '</a>';
+    }
+  
+    $('a.group').fancybox();
   }
-
-  $('a.group').fancybox();
 }
 }());
 
