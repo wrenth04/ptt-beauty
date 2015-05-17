@@ -114,7 +114,8 @@ function index(){
   function getPhoto($posts) {
     $posts.find('.title a').fancybox({
       type: 'iframe',
-      width: '90%'
+      padding: 0,
+      width: Math.min($('.bbs-screen').width()*0.8, 1200)
     });
 
     async.each($posts.find('.title'), function(title, next) {
