@@ -137,8 +137,8 @@ function index(){
           for(var i=0 ; i<_imgs.length ; i++) {
             var thumb = _imgs[i].src;
             if(thumb.indexOf('imgur.com') != -1) {
-			  thumb = thumb.replace(/\.[^\.]+$/, 'l.') + thumb.split('.').pop();
-			}
+              thumb = thumb.replace(/\.[^\.]+$/, 'l.') + thumb.split('.').pop();
+            }
             imgHTML+= 
               '<a class="group" href="'+ _imgs[i].src +'"'
               + ' title="'+ $title.text() +' ( '+(i+1)+' / '+_imgs.length+' ) "'
@@ -153,6 +153,7 @@ function index(){
             +' <span class="pull-right">'+time+'</span><br>'
             + imgHTML
           );
+          $title.append($(_temp).find('iframe'));
 
           document.body.removeChild(_temp);
           next();
@@ -170,8 +171,8 @@ function post() {
   var isInIFrame = (window.location != window.parent.location);
   if(isInIFrame) {
     $('#topbar-container').remove();
-	$('#navigation-container').remove();
-	document.body.style.padding = '0px';
+    $('#navigation-container').remove();
+    document.body.style.padding = '0px';
   } else {
     var _imgs = document.getElementsByTagName('img');
     for(var i=0 ; i<_imgs.length ; i++) {
