@@ -110,6 +110,7 @@ function index(){
     $content.append($items);
     getPhoto($items);
   });
+  $('.bbs-screen').infinitescroll('scroll');
 
   function getPhoto($posts) {
     $posts.find('.title a').fancybox({
