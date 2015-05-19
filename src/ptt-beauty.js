@@ -106,7 +106,7 @@ function index(){
   }, function(_posts, options, pagePath) {
     getPhoto(_posts);
   });
-  $('.bbs-screen').infinitescroll('scroll');
+  //$('.bbs-screen').infinitescroll('scroll');
 
   function getPhoto(_posts) {
     var $posts = $(_posts.reverse());
