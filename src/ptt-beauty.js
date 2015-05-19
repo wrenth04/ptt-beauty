@@ -138,7 +138,7 @@ function index(){
             }
             imgHTML+= 
               '<a class="group" href="'+ $($imgs[i]).attr('src') +'"'
-              + ' title="'+ $title.text() +' ( '+(i+1)+' / '+$imgs.length+' ) "'
+              + ' title="'+ $title.text().replace(/\s+/g, ' ') +' ( '+(i+1)+' / '+$imgs.length+' ) "'
               + ' rel="all">'
               + '<img class="ptt-img" data-original="'+ thumb + '"'
               + ' src="https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/loading.gif"'
