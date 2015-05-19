@@ -9,7 +9,6 @@ var ptt = {
     post: post
   }
 }
-
 if(typeof unsafeWindow === 'object') { // for greasemonkey
   if(typeof unsafeWindow.ptt === 'object') return;
   unsafeWindow.ptt = ptt;
@@ -27,6 +26,7 @@ function init(){
     if(typeof jQuery === 'undefined') return;
     if(typeof jQuery.fn.fancybox === 'undefined') return;
     if(typeof jQuery.fn.infinitescroll === 'undefined') return;
+    if(typeof jQuery.fn.lazyload === 'undefined') return;
 
     clearInterval(waitLibs);
     route();
@@ -46,7 +46,8 @@ function init(){
       'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.12/jquery.mousewheel.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/async/0.9.0/async.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/jquery-infinitescroll/2.0b2.120519/jquery.infinitescroll.min.js'
+      'https://cdnjs.cloudflare.com/ajax/libs/jquery-infinitescroll/2.0b2.120519/jquery.infinitescroll.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js'
     ];
 
     var csss = [
@@ -90,10 +91,7 @@ function index(){
   var $content = $('.r-ent:first').parent();
     
   nextPage = parseInt(nextPage);
-  var $posts = $($('.r-ent').get().reverse());
-  $posts.remove();
-  $content.append($posts);
-  getPhoto($posts);
+  getPhoto($('.r-ent').get());
 
   $('.bbs-screen').infinitescroll({
     navSelector: '#topbar a:last',
@@ -104,15 +102,15 @@ function index(){
       $('.pull-right a:nth-child(2)').attr('href', prev);
       return prev;
     }
-  }, function(items, options, pagePath) {
-    var $items = $(items.reverse());
-    $items.remove();
-    $content.append($items);
-    getPhoto($items);
+  }, function(_posts, options, pagePath) {
+    getPhoto(_posts);
   });
   $('.bbs-screen').infinitescroll('scroll');
 
-  function getPhoto($posts) {
+  function getPhoto(_posts) {
+    var $posts = $(_posts.reverse());
+    $posts.remove();
+    $content.append($posts);
     $posts.find('.title a').fancybox({
       type: 'iframe',
       padding: 0,
@@ -144,7 +142,8 @@ function index(){
               '<a class="group" href="'+ _imgs[i].src +'"'
               + ' title="'+ $title.text() +' ( '+(i+1)+' / '+_imgs.length+' ) "'
               + ' rel="all">'
-              + '<img class="ptt-img" src="'+ thumb + '"'
+              + '<img class="ptt-img" data-original="'+ thumb + '"'
+              + ' src="https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/loading.gif"'
               + '></a>';
           }
           var time = _temp.getElementsByClassName('article-meta-value')[3].innerHTML;
@@ -154,7 +153,8 @@ function index(){
             +' <span class="pull-right">'+time+'</span><br>'
             + imgHTML
           );
-          $title.append($(_temp).find('iframe'));
+          var $video = $(_temp).find('iframe');
+          if($video.length) $title.append($video);
 
           document.body.removeChild(_temp);
           next();
@@ -164,6 +164,7 @@ function index(){
 
     }, function() {
       $posts.find('a.group').fancybox();
+      $posts.find('a.group img').lazyload({effect: 'fadeIn'});
     });
   }
 }
