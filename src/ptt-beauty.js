@@ -97,6 +97,7 @@ function index(){
     navSelector: '#topbar a:last',
     nextSelector: '.pull-right a:nth-child(2)',
     itemSelector: '.r-ent',
+    extraScrollPx: 500,
     path: function(a, b) {
       var prev = pagePrefix + nextPage-- + '.html';
       $('.pull-right a:nth-child(2)').attr('href', prev);
@@ -164,7 +165,10 @@ function index(){
 
     }, function() {
       $posts.find('a.group').fancybox();
-      $posts.find('a.group img').lazyload({effect: 'fadeIn'});
+      $posts.find('a.group img').lazyload({
+        effect: 'fadeIn',
+        threshold: 300
+      });
     });
   }
 }
