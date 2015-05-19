@@ -126,18 +126,18 @@ function index(){
       req.open('GET', $title.find('a').attr('href'), true);
       req.onload = function() {
         if(req.status == 200) {
-          var rawHTML = req.responseText.replace(/src/g, 'src2');
+          var rawHTML = req.responseText.replace(/<img/g, '<imeg').replace(/img>/g, 'imeg>');
           var $temp = $(rawHTML);
-          var $imgs = $temp.find('img');
+          var $imgs = $temp.find('imeg');
 
           var imgHTML = '';
           for(var i=0 ; i<$imgs.length ; i++) {
-            var thumb = $($imgs[i]).attr('src2');
+            var thumb = $($imgs[i]).attr('src');
             if(thumb.indexOf('imgur.com') != -1) {
               thumb = thumb.replace(/\.[^\.]+$/, 'l.') + thumb.split('.').pop();
             }
             imgHTML+= 
-              '<a class="group" href="'+ $($imgs[i]).attr('src2') +'"'
+              '<a class="group" href="'+ $($imgs[i]).attr('src') +'"'
               + ' title="'+ $title.text() +' ( '+(i+1)+' / '+$imgs.length+' ) "'
               + ' rel="all">'
               + '<img class="ptt-img" data-original="'+ thumb + '"'
@@ -153,7 +153,8 @@ function index(){
             + imgHTML
           );
           var $video = $temp.find('iframe');
-          if($video.length) $title.append($video);
+          $title.append($video);
+          delete $temp;
 
           next();
         }
