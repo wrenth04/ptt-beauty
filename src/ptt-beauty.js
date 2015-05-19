@@ -126,38 +126,35 @@ function index(){
       req.open('GET', $title.find('a').attr('href'), true);
       req.onload = function() {
         if(req.status == 200) {
-          var _temp = document.createElement('div');
-          _temp.style.display = 'none'
-          document.body.appendChild(_temp);
-
-          _temp.innerHTML = req.response
-          var _imgs = _temp.getElementsByTagName('img');
+          var rawHTML = req.responseText.replace(/src/g, 'src2');
+          var $temp = $(rawHTML);
+          var $imgs = $temp.find('img');
 
           var imgHTML = '';
-          for(var i=0 ; i<_imgs.length ; i++) {
-            var thumb = _imgs[i].src;
+          for(var i=0 ; i<$imgs.length ; i++) {
+            var thumb = $($imgs[i]).attr('src2');
             if(thumb.indexOf('imgur.com') != -1) {
               thumb = thumb.replace(/\.[^\.]+$/, 'l.') + thumb.split('.').pop();
             }
             imgHTML+= 
-              '<a class="group" href="'+ _imgs[i].src +'"'
-              + ' title="'+ $title.text() +' ( '+(i+1)+' / '+_imgs.length+' ) "'
+              '<a class="group" href="'+ $($imgs[i]).attr('src2') +'"'
+              + ' title="'+ $title.text() +' ( '+(i+1)+' / '+$imgs.length+' ) "'
               + ' rel="all">'
               + '<img class="ptt-img" data-original="'+ thumb + '"'
               + ' src="https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/loading.gif"'
               + '></a>';
           }
-          var time = _temp.getElementsByClassName('article-meta-value')[3].innerHTML;
+          
+          var time = $temp.find('.article-meta-value')[3].innerHTML;
           $title.html(
             $title.html()
-            +' ('+ _imgs.length +'p)'
+            +' ('+ $imgs.length +'p)'
             +' <span class="pull-right">'+time+'</span><br>'
             + imgHTML
           );
-          var $video = $(_temp).find('iframe');
+          var $video = $temp.find('iframe');
           if($video.length) $title.append($video);
 
-          document.body.removeChild(_temp);
           next();
         }
       }
@@ -167,7 +164,7 @@ function index(){
       $posts.find('a.group').fancybox();
       $posts.find('a.group img').lazyload({
         effect: 'fadeIn',
-        threshold: 300
+        threshold : 300
       });
     });
   }
