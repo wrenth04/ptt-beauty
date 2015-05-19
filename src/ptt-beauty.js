@@ -145,7 +145,7 @@ function index(){
               + '></a>';
           }
           
-          var time = $temp.find('.article-meta-value')[3].innerHTML;
+          var time = $temp.find('.article-meta-value:last').text();
           $title.html(
             $title.html()
             +' ('+ $imgs.length +'p)'
