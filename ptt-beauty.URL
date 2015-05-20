@@ -1,5 +1,5 @@
 [InternetShortcut]
-URL=javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://rawgithub.com/wrenth04/ptt-beauty/master/src/ptt-beauty.js';})();
+URL=javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://rawgithub.com/wrenth04/ptt-beauty/master/src/ptt-beauty.js?'+new Date().getTime();})();
 IDList=
 HotKey=0
 IconFile=C:\Users\Administrator\AppData\Local\Mozilla\Firefox\Profiles\4a1eix6q.default\shortcutCache\9HZXt01dKJsY89eheQrKzg==.ico
