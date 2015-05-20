@@ -118,13 +118,8 @@ function index(){
       width: Math.min($('.bbs-screen').width()*0.8, 1200)
     });
 
-    async.each($posts.find('.title'), function(title, next) {
-      var $title = $(title);
-      if($title.find('a').length == 0) return next();
-
-      var req = new XMLHttpRequest();
-      req.open('GET', $title.find('a').attr('href'), true);
-      req.onload = function() {
+    var onload = function(req, $title, next) {
+      return function() {
         if(req.status == 200) {
           var rawHTML = req.responseText.replace(/<img/g, '<imeg').replace(/img>/g, 'imeg>');
           var $temp = $(rawHTML);
@@ -154,20 +149,33 @@ function index(){
           );
           var $video = $temp.find('iframe');
           $title.append($video);
-          delete $temp;
+          $temp = null;
 
           next();
         }
-      }
+      };
+    };
+    
+    var done = function($posts) {
+      return function() {
+        $posts.find('a.group').fancybox();
+        $posts.find('a.group img').lazyload({
+          effect: 'fadeIn',
+          threshold : 300
+        });
+      };
+    };
+    
+    async.each($posts.find('.title'), function(title, next) {
+      var $title = $(title);
+      if($title.find('a').length == 0) return next();
+
+      var req = new XMLHttpRequest();
+      req.open('GET', $title.find('a').attr('href'), true);
+      req.onload = onload(req, $title, next);
       req.send();
 
-    }, function() {
-      $posts.find('a.group').fancybox();
-      $posts.find('a.group img').lazyload({
-        effect: 'fadeIn',
-        threshold : 300
-      });
-    });
+    }, done($posts));
   }
 }
 
