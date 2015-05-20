@@ -2,7 +2,7 @@
 // @name        ptt beauty
 // @namespace   wei
 // @include     https://www.ptt.cc/bbs/*
-// @version     1
+// @version     1.1.3
 // @grant       none
 // ==/UserScript==
 
