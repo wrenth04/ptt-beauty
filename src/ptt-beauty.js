@@ -1,23 +1,114 @@
+// ==UserScript==
+
+// @name        ptt beauty
+// @namespace   wei
+// @include     https://www.ptt.cc/bbs/*
+// @version     1
+// @grant       none
+// ==/UserScript==
+
 (function () {
 var ptt = {
   config: {
-    size: '450px'
+    size: '450px',
+    auth: false
   },
   init: init,
   route: {
     index: index,
     post: post
+  },
+  utils: {
+    saveToGoogle: saveToGoogle
   }
-}
+};
 if(typeof unsafeWindow === 'object') { // for greasemonkey
   if(typeof unsafeWindow.ptt === 'object') return;
   unsafeWindow.ptt = ptt;
+  unsafeWindow.loginCallback = googleLoginCallback;
 } else {
   if(typeof window.ptt === 'object') return;
   window.ptt = ptt;
+  window.loginCallback = googleLoginCallback;
 }
 
 setTimeout(function(){ ptt.init(); }, 100);
+
+function saveToGoogle(_post) {
+  if(!ptt.config.auth) {
+    alert('please login google account');
+    return;
+  }
+
+  async.eachLimit($(_post).find('.group'), 5, upload, function() {
+    alert($(_post).find('a:first').text() + ' done');
+  });
+
+  function upload(_link, next) {
+    getBase64Img(_link.href, function(data) {
+      var boundary = '-------314159265358979323846';
+      var delimiter = "\r\n--" + boundary + "\r\n";
+      var close_delim = "\r\n--" + boundary + "--";
+      var fileType = 'image/jpg';
+      var metadata = {
+        'title': _link.title,
+        'mimeType': fileType
+      };
+  
+      var multipartRequestBody =
+        delimiter
+        + 'Content-Type: application/json\r\n\r\n'
+        + JSON.stringify(metadata)
+        + delimiter
+        + 'Content-Type: ' + fileType+ '\r\n'
+        + 'Content-Transfer-Encoding: base64\r\n'
+        + '\r\n'
+        + data
+        + close_delim;
+  
+      var request = gapi.client.request({
+        'path': '/upload/drive/v2/files',
+        'method': 'POST',
+        'params': {'uploadType': 'multipart'},
+        'headers': {
+          'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+        },
+        'body': multipartRequestBody
+      });
+  
+      request.execute(function(result){
+        next();
+      });
+    });
+  }
+
+  // cb(base64Data)
+  function getBase64Img(url, cb) {
+    var img = new Image();
+    img.setAttribute('crossOrigin', 'anonymous');
+    img.src = url;
+    img.onload = function () {
+      var canvas = document.createElement("canvas");
+      canvas.width =this.width;
+      canvas.height =this.height;
+      var ctx = canvas.getContext("2d");
+      ctx.drawImage(this, 0, 0);
+      var dataUrl = canvas.toDataURL("image/png");
+      cb(dataUrl.replace(/^data:image\/(png|jpg);base64,/, ""));
+    }
+  }
+}
+
+function googleLoginCallback(authResult) {
+  if(authResult['access_token']) {
+    document.getElementById('signinButton').setAttribute('style', 'display: none');
+    gapi.client.load('drive', 'v2', function(){
+      ptt.config.auth = true;
+    });
+  } else if (authResult['error']) {
+    console.log('error')
+  }
+}
 
 function init(){
   loadLibs();
@@ -29,16 +120,34 @@ function init(){
     if(typeof jQuery.fn.lazyload === 'undefined') return;
 
     clearInterval(waitLibs);
-    route();
+    async.series([googleLogin, route]);
   }, 100);
 
-  function route() {
+  function googleLogin(next) {
+    $('#topbar').append(
+      '<span id="signinButton">'
+      +'  <span'
+      +'    class="g-signin"'
+      +'    data-callback="loginCallback"'
+      +'    data-clientid="1029231814918-l22c0cqkah8cfgj34o7pf7g545rr3bbr.apps.googleusercontent.com"'
+      +'    data-cookiepolicy="single_host_origin"'
+      +'    data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/drive"">'
+      +' </span>'
+      +'</span>'
+    );
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/client:plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+    next();
+  }
+  function route(next) {
     var url = document.location.href;
     if(url.indexOf('index') != -1) {
       ptt.route.index();
     } else if(url.replace(/\/M[^\/]+html$/).length != url.length) {
       ptt.route.post();
     }
+    next();
   }
 
   function loadLibs() {
@@ -144,7 +253,9 @@ function index(){
           $title.html(
             $title.html()
             +' ('+ $imgs.length +'p)'
-            +' <span class="pull-right">'+time+'</span><br>'
+            +' <span class="pull-right">'+time+'</span>'
+            +' <input type="button" class="pull-right" value="save to google"'
+            +' onclick="ptt.utils.saveToGoogle(this.parentNode)"><br>'
             + imgHTML
           );
           var $video = $temp.find('iframe');
