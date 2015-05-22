@@ -1,12 +1,3 @@
-// ==UserScript==
-
-// @name        ptt beauty
-// @namespace   wei
-// @include     https://www.ptt.cc/bbs/*
-// @version     1
-// @grant       none
-// ==/UserScript==
-
 (function () {
 var ptt = {
   config: {
@@ -34,14 +25,17 @@ if(typeof unsafeWindow === 'object') { // for greasemonkey
 
 setTimeout(function(){ ptt.init(); }, 100);
 
-function saveToGoogle(_post) {
+function saveToGoogle(_btn) {
   if(!ptt.config.auth) {
     alert('please login google account');
     return;
   }
 
-  async.eachLimit($(_post).find('.group'), 5, upload, function() {
-    alert($(_post).find('a:first').text() + ' done');
+  var $post = $(_btn.parentNode);
+  _btn.value = 'uploading';
+  _btn.disabled = true;
+  async.eachLimit($post.find('.group'), 5, upload, function() {
+    _btn.value = 'done';
   });
 
   function upload(_link, next) {
@@ -254,8 +248,9 @@ function index(){
             $title.html()
             +' ('+ $imgs.length +'p)'
             +' <span class="pull-right">'+time+'</span>'
-            +' <input type="button" class="pull-right" value="save to google"'
-            +' onclick="ptt.utils.saveToGoogle(this.parentNode)"><br>'
+            + ($imgs.length ? ' <input type="button" class="pull-right"'
+				+ 'value="save to google" onclick="ptt.utils.saveToGoogle(this)">)': '')
+			+ '<br>'
             + imgHTML
           );
           var $video = $temp.find('iframe');
