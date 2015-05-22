@@ -87,8 +87,8 @@ function saveToGoogle(_btn) {
       canvas.height =this.height;
       var ctx = canvas.getContext("2d");
       ctx.drawImage(this, 0, 0);
-      var dataUrl = canvas.toDataURL("image/png");
-      cb(dataUrl.replace(/^data:image\/(png|jpg);base64,/, ""));
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      cb(dataUrl.replace(/^data:image\/(png|jpeg);base64,/, ""));
     }
   }
 }
