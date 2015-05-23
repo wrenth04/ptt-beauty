@@ -32,10 +32,11 @@ function saveToGoogle(_btn) {
   }
 
   var $post = $(_btn.parentNode);
-  _btn.value = 'uploading';
-  _btn.disabled = true;
+  var $status = $(_btn.parentNode).find('.status:first');
+  _btn.style.display = 'none';
+  $status.text('uploading');
   async.eachLimit($post.find('.group'), 5, upload, function() {
-    _btn.value = 'done';
+    $status.text('done');
   });
 
   function upload(_link, next) {
@@ -178,6 +179,7 @@ function init(){
       +' .r-ent .pull-right { margin-right: 10px;}'
       +' .bbs-screen img { padding: 10px; border-radius: 10px; background-color: white; margin: 5px;}'
       +' .ptt-img { max-width: '+ptt.config.size+'; max-height: '+ptt.config.size+';}'
+      +' .google-drive { height: 32px; width: 32px; background-image: url("https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/googleDriveIcon.png"); background-repeat: no-repeat; cursor: pointer;}'
     document.head.appendChild(_customCss);
   }
 }
@@ -248,9 +250,8 @@ function index(){
             $title.html()
             +' ('+ $imgs.length +'p)'
             +' <span class="pull-right">'+time+'</span>'
-            + ($imgs.length ? ' <input type="button" class="pull-right"'
-				+ 'value="save to google" onclick="ptt.utils.saveToGoogle(this)">)': '')
-			+ '<br>'
+            + ($imgs.length ? ' <i class="google-drive pull-right" title="save to google" onclick="ptt.utils.saveToGoogle(this)"></i><span class="pull-right status"></span>': '')
+            + '<br>'
             + imgHTML
           );
           var $video = $temp.find('iframe');
