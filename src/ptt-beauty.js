@@ -111,6 +111,7 @@ function googleLoginCallback(authResult) {
 }
 
 function init(){
+  googleLogin();
   loadLibs();
   var waitLibs = setInterval(function() {
     if(typeof async === 'undefined') return;
@@ -120,34 +121,33 @@ function init(){
     if(typeof jQuery.fn.lazyload === 'undefined') return;
 
     clearInterval(waitLibs);
-    async.series([googleLogin, route]);
+    route();
   }, 100);
 
-  function googleLogin(next) {
-    $('#topbar').append(
+  function googleLogin() {
+    var _topbar = document.getElementById('topbar');
+    _topbar.innerHTML +=
       '<span id="signinButton">'
       +'  <span'
       +'    class="g-signin"'
       +'    data-callback="loginCallback"'
       +'    data-clientid="1029231814918-l22c0cqkah8cfgj34o7pf7g545rr3bbr.apps.googleusercontent.com"'
       +'    data-cookiepolicy="single_host_origin"'
-      +'    data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/drive"">'
+      +'    data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/drive">'
       +' </span>'
-      +'</span>'
-    );
+      +'</span>';
     var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
     po.src = 'https://apis.google.com/js/client:plusone.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    next();
   }
-  function route(next) {
+  
+  function route() {
     var url = document.location.href;
     if(url.indexOf('index') != -1) {
       ptt.route.index();
     } else if(url.replace(/\/M[^\/]+html$/).length != url.length) {
       ptt.route.post();
     }
-    next();
   }
 
   function loadLibs() {
