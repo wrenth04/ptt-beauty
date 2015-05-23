@@ -32,51 +32,56 @@ function saveToGoogle(_btn) {
   }
 
   var $post = $(_btn.parentNode);
+  var total = $post.find('.group').length;
   var $status = $(_btn.parentNode).find('.status:first');
   _btn.style.display = 'none';
-  $status.text('uploading');
-  async.eachLimit($post.find('.group'), 5, upload, function() {
+  $status.text('uploading 0 / ' + total);
+  async.eachLimit($post.find('.group'), 5, upload($status, total), function() {
     $status.text('done');
   });
 
-  function upload(_link, next) {
-    getBase64Img(_link.href, function(data) {
-      var boundary = '-------314159265358979323846';
-      var delimiter = "\r\n--" + boundary + "\r\n";
-      var close_delim = "\r\n--" + boundary + "--";
-      var fileType = 'image/jpg';
-      var metadata = {
-        'title': _link.title,
-        'mimeType': fileType
-      };
-  
-      var multipartRequestBody =
-        delimiter
-        + 'Content-Type: application/json\r\n\r\n'
-        + JSON.stringify(metadata)
-        + delimiter
-        + 'Content-Type: ' + fileType+ '\r\n'
-        + 'Content-Transfer-Encoding: base64\r\n'
-        + '\r\n'
-        + data
-        + close_delim;
-  
-      var request = gapi.client.request({
-        'path': '/upload/drive/v2/files',
-        'method': 'POST',
-        'params': {'uploadType': 'multipart'},
-        'headers': {
-          'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
-        },
-        'body': multipartRequestBody
+  function upload($status, total) {
+    var current = 0;
+    return function (_link, next) {
+      getBase64Img(_link.href, function(data) {
+        var boundary = '-------314159265358979323846';
+        var delimiter = "\r\n--" + boundary + "\r\n";
+        var close_delim = "\r\n--" + boundary + "--";
+        var fileType = 'image/jpg';
+        var metadata = {
+          'title': _link.title,
+          'mimeType': fileType
+        };
+    
+        var multipartRequestBody =
+          delimiter
+          + 'Content-Type: application/json\r\n\r\n'
+          + JSON.stringify(metadata)
+          + delimiter
+          + 'Content-Type: ' + fileType+ '\r\n'
+          + 'Content-Transfer-Encoding: base64\r\n'
+          + '\r\n'
+          + data
+          + close_delim;
+    
+        var request = gapi.client.request({
+          'path': '/upload/drive/v2/files',
+          'method': 'POST',
+          'params': {'uploadType': 'multipart'},
+          'headers': {
+            'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+          },
+          'body': multipartRequestBody
+        });
+    
+        request.execute(function(result){
+          $status.text('uploading ' + ++current + ' / ' + total);
+          next();
+        });
       });
-  
-      request.execute(function(result){
-        next();
-      });
-    });
+    }
   }
-
+  
   // cb(base64Data)
   function getBase64Img(url, cb) {
     var img = new Image();
