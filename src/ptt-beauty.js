@@ -184,7 +184,7 @@ function init(){
       +' .r-ent .pull-right { margin-right: 10px;}'
       +' .bbs-screen img { padding: 10px; border-radius: 10px; background-color: white; margin: 5px;}'
       +' .ptt-img { max-width: '+ptt.config.size+'; max-height: '+ptt.config.size+';}'
-      +' .google-drive { height: 30px; width: 32px; background-image: url("https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/googleDriveIcon.png"); background-repeat: no-repeat; cursor: pointer;}'
+      +' .google-drive { height: 30px; width: 30px; background-image: url("https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/googleDriveIcon.png"); background-repeat: no-repeat; cursor: pointer;}'
     document.head.appendChild(_customCss);
   }
 }
@@ -230,41 +230,41 @@ function index(){
 
     var onload = function(req, $title, next) {
       return function() {
-        if(req.status == 200) {
-          var rawHTML = req.responseText.replace(/<img/g, '<imeg').replace(/img>/g, 'imeg>');
-          var $temp = $(rawHTML);
-          var $imgs = $temp.find('imeg');
+        if(req.status != 200) return next();
+        
+        var rawHTML = req.responseText.replace(/<img/g, '<imeg').replace(/img>/g, 'imeg>');
+        var $temp = $(rawHTML);
+        var $imgs = $temp.find('imeg');
 
-          var imgHTML = '';
-          for(var i=0 ; i<$imgs.length ; i++) {
-            var thumb = $($imgs[i]).attr('src');
-            if(thumb.indexOf('imgur.com') != -1) {
-              thumb = thumb.replace(/\.[^\.]+$/, 'l.') + thumb.split('.').pop();
-            }
-            imgHTML+= 
-              '<a class="group" href="'+ $($imgs[i]).attr('src') +'"'
-              + ' title="'+ $title.text().replace(/\s+/g, ' ') +' ( '+(i+1)+' / '+$imgs.length+' ) "'
-              + ' rel="all">'
-              + '<img class="ptt-img" data-original="'+ thumb + '"'
-              + ' src="https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/loading.gif"'
-              + '></a>';
+        var imgHTML = '';
+        for(var i=0 ; i<$imgs.length ; i++) {
+          var thumb = $($imgs[i]).attr('src');
+          if(thumb.indexOf('imgur.com') != -1) {
+            thumb = thumb.replace(/\.[^\.]+$/, 'l.') + thumb.split('.').pop();
           }
-          
-          var time = $temp.find('.article-meta-value:last').text();
-          $title.html(
-            $title.html()
-            +' ('+ $imgs.length +'p)'
-            +' <span class="pull-right">'+time+'</span>'
-            + ($imgs.length ? ' <i class="google-drive pull-right" title="save to google" onclick="ptt.utils.saveToGoogle(this)"></i><span class="pull-right status"></span>': '')
-            + '<br>'
-            + imgHTML
-          );
-          var $video = $temp.find('iframe');
-          $title.append($video);
-          $temp = null;
-
-          next();
+          imgHTML+= 
+            '<a class="group" href="'+ $($imgs[i]).attr('src') +'"'
+            + ' title="'+ $title.text().replace(/\s+/g, ' ') +' ( '+(i+1)+' / '+$imgs.length+' ) "'
+            + ' rel="all">'
+            + '<img class="ptt-img" data-original="'+ thumb + '"'
+            + ' src="https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/loading.gif"'
+            + '></a>';
         }
+        
+        var time = $temp.find('.article-meta-value:last').text();
+        $title.html(
+          $title.html()
+          +' ('+ $imgs.length +'p)'
+          +' <span class="pull-right">'+time+'</span>'
+          + ($imgs.length ? ' <i class="google-drive pull-right" title="save to google" onclick="ptt.utils.saveToGoogle(this)"></i><span class="pull-right status"></span>': '')
+          + '<br>'
+          + imgHTML
+        );
+        var $video = $temp.find('iframe');
+        $title.append($video);
+        $temp = null;
+
+        next();
       };
     };
     
