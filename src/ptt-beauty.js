@@ -33,14 +33,19 @@ function saveToGoogle(_btn) {
 
   var $post = $(_btn.parentNode);
   var total = $post.find('.group').length;
-  var $status = $(_btn.parentNode).find('.status:first');
-  _btn.style.display = 'none';
-  $status.text('uploading 0 / ' + total);
-  async.eachLimit($post.find('.group'), 5, upload($status, total), function() {
-    $status.text('done');
+  var $progress = $post.find('.progress:first');
+  var $status = $post.find('.status:first');
+  $(_btn).hide();
+  $progress
+    .attr('max', total)
+    .val(0)
+    .fadeIn();
+  $status.text(' 0 / '+total);
+  async.eachLimit($post.find('.group'), 5, upload($progress, $status, total), function() {
+    //$status.text('done');
   });
 
-  function upload($status, total) {
+  function upload($progress, $status, total) {
     var current = 0;
     return function (_link, next) {
       getBase64Img(_link.href, function(data) {
@@ -75,7 +80,8 @@ function saveToGoogle(_btn) {
         });
     
         request.execute(function(result){
-          $status.text('uploading ' + ++current + ' / ' + total);
+          $progress.val(++current);
+          $status.text(' ' + current + ' / ' + total);
           next();
         });
       });
@@ -133,7 +139,7 @@ function init(){
       +'    data-callback="loginCallback"'
       +'    data-clientid="1029231814918-l22c0cqkah8cfgj34o7pf7g545rr3bbr.apps.googleusercontent.com"'
       +'    data-cookiepolicy="single_host_origin"'
-      +'    data-scope="https://www.googleapis.com/auth/drive">'
+      +'    data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/drive">'
       +' </span>'
       +'</span>';
     var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
@@ -182,6 +188,7 @@ function init(){
       +' .r-ent { width: 95%; margin-left: 2.5%; background-color: #333; border-radius: 10px;}'
       +' .r-ent:hover { background-color: #444;}'
       +' .r-ent .pull-right { margin-right: 10px;}'
+      +' .hide { display: none}'
       +' .bbs-screen img { padding: 10px; border-radius: 10px; background-color: white; margin: 5px;}'
       +' .ptt-img { max-width: '+ptt.config.size+'; max-height: '+ptt.config.size+';}'
       +' .google-drive { height: 30px; width: 30px; background-image: url("https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/googleDriveIcon.png"); background-repeat: no-repeat; cursor: pointer;}'
@@ -256,7 +263,9 @@ function index(){
           $title.html()
           +' ('+ $imgs.length +'p)'
           +' <span class="pull-right">'+time+'</span>'
-          + ($imgs.length ? ' <i class="google-drive pull-right" title="save to google" onclick="ptt.utils.saveToGoogle(this)"></i><span class="pull-right status"></span>': '')
+          + ($imgs.length ? '<i class="google-drive pull-right" title="save to google" onclick="ptt.utils.saveToGoogle(this)"></i>'
+              +'<progress class="pull-right progress hide"></progress>'
+              +'<span class="pull-right status"></span>': '')
           + '<br>'
           + imgHTML
         );
