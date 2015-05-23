@@ -184,7 +184,7 @@ function init(){
       +' .r-ent .pull-right { margin-right: 10px;}'
       +' .bbs-screen img { padding: 10px; border-radius: 10px; background-color: white; margin: 5px;}'
       +' .ptt-img { max-width: '+ptt.config.size+'; max-height: '+ptt.config.size+';}'
-      +' .google-drive { height: 32px; width: 32px; background-image: url("https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/googleDriveIcon.png"); background-repeat: no-repeat; cursor: pointer;}'
+      +' .google-drive { height: 30px; width: 32px; background-image: url("https://raw.githubusercontent.com/wrenth04/ptt-beauty/master/src/googleDriveIcon.png"); background-repeat: no-repeat; cursor: pointer;}'
     document.head.appendChild(_customCss);
   }
 }
