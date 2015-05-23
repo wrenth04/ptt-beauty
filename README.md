@@ -4,7 +4,7 @@ user script for web ptt
 ## Feature
 * auto load image
 * auto load next page
-* save image to google drive
+* save image to google [drive](https://drive.google.com/drive/my-drive?ltmpl=drive), [photos](https://plus.google.com/photos/yourphotos)
 
 ## bookmarklet
 ```
