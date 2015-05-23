@@ -270,24 +270,24 @@ function index(){
           + imgHTML
         );
         var $video = $temp.find('iframe');
-        $title.append($video);
         $temp = null;
+        $title.append($video)
+          .find('a.group img').lazyload({
+            effect: 'fadeIn',
+            threshold : 300
+          });
 
-        next();
+        setTimeout(function(){next();}, 200);
       };
     };
     
     var done = function($posts) {
       return function() {
         $posts.find('a.group').fancybox();
-        $posts.find('a.group img').lazyload({
-          effect: 'fadeIn',
-          threshold : 300
-        });
       };
     };
     
-    async.each($posts.find('.title'), function(title, next) {
+    async.eachLimit($posts.find('.title'), 3, function(title, next) {
       var $title = $(title);
       if($title.find('a').length == 0) return next();
 
