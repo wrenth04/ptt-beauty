@@ -23,7 +23,7 @@ if(typeof unsafeWindow === 'object') { // for greasemonkey
   window.loginCallback = googleLoginCallback;
 }
 
-setTimeout(function(){ ptt.init(); }, 100);
+setTimeout(ptt.init, 100);
 
 function saveToGoogle(_btn) {
   if(!ptt.config.auth) {
@@ -277,7 +277,7 @@ function index(){
             threshold : 300
           });
 
-        setTimeout(function(){next();}, 200);
+        setTimeout(next, 200);
       };
     };
     
