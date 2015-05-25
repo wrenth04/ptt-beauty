@@ -3,7 +3,7 @@ var ptt = {
   config: {
     folderName: 'ptt-beauty',
     size: '450px',
-    folder: null
+    folderId: null
   },
   init: init,
   route: {
@@ -27,7 +27,7 @@ if(typeof unsafeWindow === 'object') { // for greasemonkey
 setTimeout(ptt.init, 100);
 
 function saveToGoogle(_btn) {
-  if(!ptt.config.folder) {
+  if(!ptt.config.folderId) {
     alert('please login google account');
     return;
   }
@@ -55,7 +55,7 @@ function saveToGoogle(_btn) {
         var close_delim = "\r\n--" + boundary + "--";
         var fileType = 'image/jpg';
         var metadata = {
-          'parents': [ptt.config.folder],
+          'parents': [{id: ptt.config.folderId}],
           'title': _link.title,
           'mimeType': fileType
         };
@@ -112,7 +112,7 @@ function googleLoginCallback(authResult) {
     document.getElementById('signinButton').setAttribute('style', 'display: none');
     gapi.client.load('drive', 'v2', function(){
       getFolder(function(folder){
-        ptt.config.folder = folder;
+        ptt.config.folderId = folder.id;
       });
     });
   } else if (authResult['error']) {
