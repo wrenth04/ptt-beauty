@@ -33,19 +33,29 @@ function saveToGoogle(_btn) {
   }
 
   var $post = $(_btn.parentNode);
+  var $btn = $(_btn);
   var total = $post.find('.group').length;
   var $progress = $post.find('.progress:first');
   var $status = $post.find('.status:first');
-  $(_btn).hide();
+  $btn.hide();
   $progress
     .attr('max', total)
     .val(0)
     .fadeIn();
   $status.text(' 0 / '+total);
-  async.eachLimit($post.find('.group'), 5, upload($progress, $status, total), function() {
-    //$status.text('done');
-  });
+  async.eachLimit($post.find('.group'), 5, upload($progress, $status, total), error($btn, $progress, $status));
 
+  function error($btn, $progress, $status) {
+    return function (err) { if(err) {
+      ptt.config.folderId = null;
+      $btn.show();
+      $progress.hide();
+      $status.text('');
+      gapi.auth.signOut();
+      $('#signinButton').show();
+      alert('please relogin google account');
+    }
+  }}
   function upload($progress, $status, total) {
     var current = 0;
     return function (_link, next) {
@@ -81,9 +91,10 @@ function saveToGoogle(_btn) {
           'body': multipartRequestBody
         });
     
-        request.execute(function(result){
+        request.execute(function(res){
           $progress.val(++current);
           $status.text(' ' + current + ' / ' + total);
+          if(typeof res.id === 'undefined') return next(new Error({message: 'upload fail'}));
           next();
         });
       });
