@@ -226,9 +226,10 @@ function index(){
     .attr('href')
     .replace(/[0-9]+\.html/, '');
   var $content = $('.r-ent:first').parent();
+  var _getPhoto = getPhoto($content);
     
   nextPage = parseInt(nextPage);
-  getPhoto($content)($('.r-ent').get());
+  _getPhoto($('.r-ent').get());
 
   $('.bbs-screen').infinitescroll({
     navSelector: '#topbar a:last',
@@ -240,7 +241,7 @@ function index(){
       $('.pull-right a:nth-child(2)').attr('href', prev);
       return prev;
     }
-  }, getPhoto($content));
+  }, _getPhoto);
   $('.bbs-screen').infinitescroll('scroll');
 
   function getPhoto($content) {
