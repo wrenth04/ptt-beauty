@@ -1,4 +1,4 @@
-# ptt-beauty
+# ptt-beauty-js
 user script for web ptt
 
 ## Features
@@ -7,8 +7,9 @@ user script for web ptt
 * save image to google [drive](https://drive.google.com/drive/my-drive?ltmpl=drive), [photos](https://plus.google.com/photos/yourphotos)
 
 ## User Script
-[Click Install](https://github.com/wrenth04/ptt-beauty/raw/master/ptt_beauty.user.js) for Firefox [Greasemonkey](https://addons.mozilla.org/zh-tw/firefox/addon/greasemonkey/), Chrome [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
-
+[One-Click Install](https://github.com/wrenth04/ptt-beauty/raw/master/ptt_beauty.user.js) for Firefox
+[Greasemonkey](https://addons.mozilla.org/zh-tw/firefox/addon/greasemonkey/), Chrome
+[Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
 ## Bookmarklet
 ```javascript
