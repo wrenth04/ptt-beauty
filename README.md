@@ -11,7 +11,7 @@ user script for web ptt
 
 
 ## Bookmarklet
-```
+```javascript
 javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://rawgithub.com/wrenth04/ptt-beauty/master/src/ptt-beauty.js?'+new Date().getTime();})();
 ```
 
