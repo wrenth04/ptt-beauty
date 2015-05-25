@@ -170,7 +170,7 @@ function init(){
       +'    data-callback="loginCallback"'
       +'    data-clientid="1029231814918-l22c0cqkah8cfgj34o7pf7g545rr3bbr.apps.googleusercontent.com"'
       +'    data-cookiepolicy="single_host_origin"'
-      +'    data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/drive">'
+      +'    data-scope="https://www.googleapis.com/auth/drive">'
       +' </span>'
       +'</span>';
     var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
