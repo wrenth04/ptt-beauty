@@ -1,6 +1,7 @@
 (function () {
 var ptt = {
   config: {
+    folderName: 'ptt-beauty',
     size: '450px',
     folder: null
   },
@@ -119,7 +120,7 @@ function googleLoginCallback(authResult) {
   }
   
   function getFolder(cb) {
-    gapi.client.drive.files.list({q: 'title="ptt-beauty" and trashed=false'}).execute(function(res){
+    gapi.client.drive.files.list({q: 'title="'+ptt.config.folderName+'" and trashed=false'}).execute(function(res){
       if(res.items.length == 0) return createFolder(cb);
       return cb(res.items[0]);
     });
@@ -128,7 +129,7 @@ function googleLoginCallback(authResult) {
   function createFolder(cb) {
     gapi.client.drive.files.insert({
       resource: {
-        title: 'ptt-beauty',
+        title: ptt.config.folderName,
         mimeType: 'application/vnd.google-apps.folder'
       }
     }).execute(cb);
