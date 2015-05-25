@@ -225,9 +225,10 @@ function index(){
   var pagePrefix = $('.pull-right a:nth-child(2)')
     .attr('href')
     .replace(/[0-9]+\.html/, '');
+  var $content = $('.r-ent:first').parent();
     
   nextPage = parseInt(nextPage);
-  getPhoto($('.r-ent').get());
+  getPhoto($content)($('.r-ent').get());
 
   $('.bbs-screen').infinitescroll({
     navSelector: '#topbar a:last',
@@ -239,7 +240,7 @@ function index(){
       $('.pull-right a:nth-child(2)').attr('href', prev);
       return prev;
     }
-  }, getPhoto($('.r-ent:first').parent()));
+  }, getPhoto($content));
   $('.bbs-screen').infinitescroll('scroll');
 
   function getPhoto($content) {
