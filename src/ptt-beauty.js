@@ -2,7 +2,7 @@
 var ptt = {
   config: {
     size: '450px',
-    auth: false
+    folder: null
   },
   init: init,
   route: {
@@ -26,7 +26,7 @@ if(typeof unsafeWindow === 'object') { // for greasemonkey
 setTimeout(ptt.init, 100);
 
 function saveToGoogle(_btn) {
-  if(!ptt.config.auth) {
+  if(!ptt.config.folder) {
     alert('please login google account');
     return;
   }
@@ -54,6 +54,7 @@ function saveToGoogle(_btn) {
         var close_delim = "\r\n--" + boundary + "--";
         var fileType = 'image/jpg';
         var metadata = {
+          'parents': [ptt.config.folder],
           'title': _link.title,
           'mimeType': fileType
         };
@@ -109,10 +110,28 @@ function googleLoginCallback(authResult) {
   if(authResult['access_token']) {
     document.getElementById('signinButton').setAttribute('style', 'display: none');
     gapi.client.load('drive', 'v2', function(){
-      ptt.config.auth = true;
+      getFolder(function(folder){
+        ptt.config.folder = folder;
+      });
     });
   } else if (authResult['error']) {
     console.log('error')
+  }
+  
+  function getFolder(cb) {
+    gapi.client.drive.files.list({q: 'title="ptt-beauty" and trashed=false'}).execute(function(res){
+      if(res.items.length == 0) return createFolder(cb);
+      return cb(res.items[0]);
+    });
+  }
+
+  function createFolder(cb) {
+    gapi.client.drive.files.insert({
+      resource: {
+        title: 'ptt-beauty',
+        mimeType: 'application/vnd.google-apps.folder'
+      }
+    }).execute(cb);
   }
 }
 
