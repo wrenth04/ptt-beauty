@@ -124,6 +124,9 @@ function googleLoginCallback(authResult) {
     gapi.client.load('drive', 'v2', function(){
       getFolder(function(folder){
         ptt.config.folderId = folder.id;
+        var _driveLink = document.getElementById('driveLink');
+        _driveLink.style.display = 'block';
+        _driveLink.href = 'https://drive.google.com/drive/folders/' + folder.id;
       });
     });
   } else if (authResult['error']) {
@@ -172,7 +175,8 @@ function init(){
       +'    data-cookiepolicy="single_host_origin"'
       +'    data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/drive">'
       +' </span>'
-      +'</span>';
+      +'</span>'
+      +'<a id="driveLink" class="google-drive hide" target="_blank" title="go to drive"></a>';
     var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
     po.src = 'https://apis.google.com/js/client:plusone.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
