@@ -176,7 +176,8 @@ function init(){
       +'    data-scope="https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/drive">'
       +' </span>'
       +'</span>'
-      +'<a id="driveLink" class="google-drive hide" target="_blank" title="go to drive"></a>';
+      +'<a id="driveLink" class="google-drive" target="_blank" title="go to drive" style="display: none;"></a>'
+      +'<a></a>';
     var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
     po.src = 'https://apis.google.com/js/client:plusone.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
