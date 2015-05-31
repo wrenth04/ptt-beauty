@@ -207,7 +207,7 @@ function init(){
     );
     $('#push').val(ptt.config.pushFilter).change(function(){
       if(ptt.config.pushFilter != $(this).val())
-        document.location.href = document.location.href.replace(/\?.*/, '?push=') + $(this).val();
+        document.location.href = document.location.href.replace(/\?.*/, '') + '?push=' + $(this).val();
     });
   }
   
