@@ -3,6 +3,7 @@ var ptt = {
   config: {
     folderName: 'ptt-beauty',
     size: '450px',
+    pushFilter: 50,
     folderId: null
   },
   init: init,
@@ -14,6 +15,7 @@ var ptt = {
     saveToGoogle: saveToGoogle
   }
 };
+
 if(typeof unsafeWindow === 'object') { // for greasemonkey
   if(typeof unsafeWindow.ptt === 'object') return;
   unsafeWindow.ptt = ptt;
@@ -159,8 +161,10 @@ function init(){
     if(typeof jQuery.fn.fancybox === 'undefined') return;
     if(typeof jQuery.fn.infinitescroll === 'undefined') return;
     if(typeof jQuery.fn.lazyload === 'undefined') return;
+    if(typeof jQuery.url === 'undefined') return;
 
     clearInterval(waitLibs);
+    initPush();
     route();
   }, 100);
 
@@ -183,6 +187,30 @@ function init(){
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
   }
   
+  function initPush() {
+    ptt.config.pushFilter = parseInt($.url().param('push')) || 0;
+    $('.pull-right a:nth-child(4)')[0].href += '?push=' + ptt.config.pushFilter;
+    $('.action-bar .pull-right').append(
+      '<select id="push">'
+      +'<option value="0">0</option>'
+      +'<option value="10">10</option>'
+      +'<option value="20">20</option>'
+      +'<option value="30">30</option>'
+      +'<option value="40">40</option>'
+      +'<option value="50">50</option>'
+      +'<option value="60">60</option>'
+      +'<option value="70">70</option>'
+      +'<option value="80">80</option>'
+      +'<option value="90">90</option>'
+      +'<option value="100">爆</option>'
+      +'</select>'
+    );
+    $('#push').val(ptt.config.pushFilter).change(function(){
+      if(ptt.config.pushFilter != $(this).val())
+        document.location.href = document.location.href.replace(/\?.*/, '?push=') + $(this).val();
+    });
+  }
+  
   function route() {
     var url = document.location.href;
     if(url.indexOf('index') != -1) {
@@ -198,6 +226,7 @@ function init(){
       'https://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.12/jquery.mousewheel.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/async/0.9.0/async.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/jquery-infinitescroll/2.0b2.120519/jquery.infinitescroll.min.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/jquery-url-parser/2.3.1/purl.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js'
     ];
 
@@ -241,11 +270,11 @@ function index(){
   var pagePrefix = $('.pull-right a:nth-child(2)')
     .attr('href')
     .replace(/[0-9]+\.html/, '');
-  var $content = $('.r-ent:first').parent();
-  var _getPhoto = getPhoto($content);
+  var $content = $('.bbs-screen:first');
+  var getPhoto = _getPhoto($content);
     
   nextPage = parseInt(nextPage);
-  _getPhoto($('.r-ent').get());
+  getPhoto($('.r-ent').get());
 
   $('.bbs-screen').infinitescroll({
     navSelector: '#topbar a:last',
@@ -254,13 +283,13 @@ function index(){
     extraScrollPx: 500,
     path: function(a, b) {
       var prev = pagePrefix + nextPage-- + '.html';
-      $('.pull-right a:nth-child(2)').attr('href', prev);
+      $('.pull-right a:nth-child(2)').attr('href', prev+'?push='+ptt.config.pushFilter);
       return prev;
     }
-  }, _getPhoto);
+  }, getPhoto);
   $('.bbs-screen').infinitescroll('scroll');
 
-  function getPhoto($content) {
+  function _getPhoto($content) {
     return function(_posts) {
       var $posts = $(_posts.reverse());
       $posts.remove();
@@ -320,13 +349,22 @@ function index(){
       var done = function($posts) {
         return function() {
           $posts.find('a.group').fancybox();
+          if($('.bbs-screen').height() < 2000)
+            $('.bbs-screen').infinitescroll('scroll');
         };
       };
       
       async.eachLimit($posts.find('.title'), 3, function(title, next) {
         var $title = $(title);
-        if($title.find('a').length == 0) return next();
+        var $post = $title.parent();
+        var pushNum = $post.find('.nrec').text();
   
+        if($title.find('a').length == 0 || !(pushNum > ptt.config.pushFilter || pushNum === '爆')) {
+          if($('.r-ent') > 1) $post.remove();
+          else $post.hide();
+          return next();
+        }
+        
         var req = new XMLHttpRequest();
         req.open('GET', $title.find('a').attr('href'), true);
         req.onload = onload(req, $title, next);
@@ -359,4 +397,3 @@ function post() {
   }
 }
 }());
-
