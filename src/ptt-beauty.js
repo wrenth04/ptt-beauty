@@ -346,10 +346,11 @@ function index(){
         };
       };
       
+      var found = false;
       var done = function($posts) {
         return function() {
           $posts.find('a.group').fancybox();
-          if($('.bbs-screen').height() < 2000)
+          if($('.bbs-screen').height() < 2000 || !found)
             $('.bbs-screen').infinitescroll('scroll');
         };
       };
@@ -365,6 +366,7 @@ function index(){
           return next();
         }
         
+        found = true;
         var req = new XMLHttpRequest();
         req.open('GET', $title.find('a').attr('href'), true);
         req.onload = onload(req, $title, next);
