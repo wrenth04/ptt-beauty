@@ -164,7 +164,6 @@ function init(){
     if(typeof jQuery.url === 'undefined') return;
 
     clearInterval(waitLibs);
-    initPush();
     route();
   }, 100);
 
@@ -214,6 +213,7 @@ function init(){
   function route() {
     var url = document.location.href;
     if(url.indexOf('index') != -1) {
+      initPush();
       ptt.route.index();
     } else if(url.replace(/\/M[^\/]+html$/).length != url.length) {
       ptt.route.post();
