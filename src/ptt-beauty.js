@@ -188,8 +188,8 @@ function init(){
   
   function initPush() {
     ptt.config.pushFilter = parseInt($.url().param('push')) || 0;
-    $('.pull-right a:nth-child(4)')[0].href += '?push=' + ptt.config.pushFilter;
-    $('.action-bar .pull-right').append(
+    $('.btn-group-paging a:nth-child(4)')[0].href += '?push=' + ptt.config.pushFilter;
+    $('.action-bar .btn-group-paging').append(
       '<select id="push">'
       +'<option value="0">0</option>'
       +'<option value="10">10</option>'
@@ -263,11 +263,11 @@ function init(){
 
 function index(){
   $('.bbs-screen').css('max-width', '100%');
-  var nextPage = $('.pull-right a:nth-child(2)')
+  var nextPage = $('.btn-group-paging a:nth-child(2)')
     .attr('href')
     .replace(/.*index/, '')
     .replace('.html', '');
-  var pagePrefix = $('.pull-right a:nth-child(2)')
+  var pagePrefix = $('.btn-group-paging a:nth-child(2)')
     .attr('href')
     .replace(/[0-9]+\.html/, '');
   var $content = $('.bbs-screen:first');
@@ -278,12 +278,12 @@ function index(){
 
   $('.bbs-screen').infinitescroll({
     navSelector: '#topbar a:last',
-    nextSelector: '.pull-right a:nth-child(2)',
+    nextSelector: '.btn-group-paging a:nth-child(2)',
     itemSelector: '.r-ent',
     extraScrollPx: 500,
     path: function(a, b) {
       var prev = pagePrefix + nextPage-- + '.html';
-      $('.pull-right a:nth-child(2)').attr('href', prev+'?push='+ptt.config.pushFilter);
+      $('.btn-group-paging a:nth-child(2)').attr('href', prev+'?push='+ptt.config.pushFilter);
       return prev;
     }
   }, getPhoto);
