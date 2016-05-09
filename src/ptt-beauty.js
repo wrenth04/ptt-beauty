@@ -250,6 +250,7 @@ function init(){
     var _customCss = document.createElement('style');
     _customCss.innerHTML =
       'a.fancybox-nav:hover, a.group:hover { background-color:transparent }'
+      +' .btn-group-paging { float: none;}'
       +' .r-ent { width: 95%; margin-left: 2.5%; background-color: #333; border-radius: 10px;}'
       +' .r-ent:hover { background-color: #444;}'
       +' .r-ent .pull-right { margin-right: 10px;}'
